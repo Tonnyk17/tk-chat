@@ -4,16 +4,17 @@ import { Google } from '@mui/icons-material'
 
 export const Login = () => {
 
-  const { signIn } = UserAuth();
+  const { signInGoogle, user } = UserAuth();
 
   const login = async () => {
     try {
-      signIn();
+      signInGoogle();
     } catch (error) {
       console.log(error)
     }
   }
 
+  //console.log(user, 'Login')
   return(
     <>
       <div className="w-80 h-80 bg-cyan-800 bg-opacity-80 rounded-xl border-2 border-cyan-300 flex flex-col items-center pt-20">

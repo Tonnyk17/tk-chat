@@ -1,9 +1,13 @@
-import { useContext, createContext, ReactNode } from "react";
+import { useContext, createContext, ReactNode, useEffect, useState } from "react";
 import { auth } from "@/firebaseConfig";
 import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider} from 'firebase/auth';
+import { useRouter } from "next/router";
+import type { User } from "firebase/auth";
 
 type contextType = {
-  signIn: () => void;
+  signInGoogle: () => void;
+  signOutGoogle: () => void;
+  user: User | null
 }
 
 type AuthProviderType = {
@@ -11,20 +15,41 @@ type AuthProviderType = {
 };
 
 const defaultValues: contextType = {
-  signIn: () => null
+  signInGoogle: () => null,
+  signOutGoogle: () => null,
+  user: null
 }
 
 const AuthContext = createContext<contextType>(defaultValues)
 
 export const AuthContextProvider = ({ children }: AuthProviderType) => {
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
   
-  const signIn = () => {
+  const signInGoogle = async() => {
     const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider)
-    console.log("Login")
+    await signInWithRedirect(auth, provider)
   }
+
+  useEffect(() => {
+    onAuthStateChanged(auth,(user) => setUser(user))
+  },[])
+
+  useEffect(() => {
+    if(!!user) {
+      router.push('/chat')
+    }
+    else{
+      router.push('/');
+    }
+  },[user])
+
+  const signOutGoogle = async() => {
+    await signOut(auth)
+  }
+
   return(
-    <AuthContext.Provider value={{ signIn }}>
+    <AuthContext.Provider value={{ signInGoogle, signOutGoogle, user }}>
       { children }
     </AuthContext.Provider>
   )
