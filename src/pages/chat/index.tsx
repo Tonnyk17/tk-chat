@@ -1,20 +1,17 @@
+import { ProfileMenu } from "@/components/ProfileMenu";
 import { UserAuth } from "@/context/AuthContext"
 
 export default function Chat() {
-  const { user, signOutGoogle } = UserAuth();
-
-  const logout = () => {
-    try {
-      signOutGoogle();
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const { signOutGoogle, user } = UserAuth();
 
   return (
     <>
       <div className='w-full h-screen flex justify-center items-center'>
-        <button onClick={logout}>SignOut</button>
+        <div className="w-5/6 h-4/5 bg-cyan-800 bg-opacity-80 rounded-xl border-2 border-cyan-300 flex shadow-md shadow-cyan-300"> 
+          <div className="w-1/3 bg-cyan-900 bg-opacity-60 h-full rounded-s-xl border-r border-cyan-300 p-5 flex">
+            <ProfileMenu source={user?.photoURL} name={user?.displayName}/>  
+          </div>      
+        </div>
       </div>
     </>
   )

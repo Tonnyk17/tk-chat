@@ -17,7 +17,7 @@ export const Login = () => {
   //console.log(user, 'Login')
   return(
     <>
-      <div className="w-80 h-80 bg-cyan-800 bg-opacity-80 rounded-xl border-2 border-cyan-300 flex flex-col items-center pt-20">
+      <div className="w-80 h-80 bg-cyan-800 bg-opacity-80 rounded-xl border-2 border-cyan-300 flex flex-col items-center pt-20 shadow-md shadow-cyan-300">
         <p className='text-2xl pb-10 font-bold'>
           Welcome to Tk chat
         </p>
