@@ -18,10 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-image: url('https://firebasestorage.googleapis.com/v0/b/tk-chat-851f8.appspot.com/o/coffee.webp?alt=media&token=add65162-3bd1-41e7-8999-4a586540d28b');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
