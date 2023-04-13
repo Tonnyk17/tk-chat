@@ -5,12 +5,8 @@ import { useAuth } from '@/context/AuthContext'
 export const Login = () => {
   const { signInGoogle } = useAuth()
   
-  const login = async() => {
-    try {
-      signInGoogle()
-    } catch (error) {
-      console.log(error)
-    }
+  const handleLogin = async() => {
+    await signInGoogle()
   }
 
   return(
@@ -19,7 +15,7 @@ export const Login = () => {
         <p className='text-2xl pb-10 font-bold'>
           Welcome to Tk chat
         </p>
-        <button onClick={login} className=' bg-purple-900 p-2 rounded-md hover:opacity-70 flex gap-2'>
+        <button onClick={handleLogin} className=' bg-purple-900 p-2 rounded-md hover:opacity-70 flex gap-2'>
           <Icon component={Google} fontSize={'medium'}/><span>Sign in with Google</span>
         </button>
       </div>

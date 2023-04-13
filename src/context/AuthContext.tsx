@@ -34,21 +34,21 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     await signInWithRedirect(auth, provider)
   }
 
-  useEffect(() => {
-    onAuthStateChanged(auth,(user) => {
-      setIsLoading(false);
-      setUser(user);
-    })
-  },[])
-
-  useEffect(() => {
-    if(!!user) {
+  const sessionRedirect = (userData : User | null) => {
+    if(!!userData){
       router.push('/chat')
     }
     else{
-      router.push('/');
+      router.push('/')
     }
-  },[user])
+  }
+  useEffect(() => {
+    onAuthStateChanged(auth,(currentUser) => {
+      setUser(currentUser)
+      sessionRedirect(currentUser)
+      setIsLoading(false); 
+    })
+  },[])
 
   const signOutGoogle = async() => {
     await signOut(auth)
