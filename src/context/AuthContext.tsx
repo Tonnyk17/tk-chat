@@ -7,7 +7,8 @@ import type { User } from "firebase/auth";
 type contextType = {
   signInGoogle: () => void;
   signOutGoogle: () => void;
-  user: User | null
+  user: User | null;
+  isLoading: boolean;
 }
 
 type AuthProviderType = {
@@ -17,13 +18,15 @@ type AuthProviderType = {
 const defaultValues: contextType = {
   signInGoogle: () => null,
   signOutGoogle: () => null,
-  user: null
+  user: null,
+  isLoading: true,
 }
 
 const AuthContext = createContext<contextType>(defaultValues)
 
 export const AuthContextProvider = ({ children }: AuthProviderType) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   
   const signInGoogle = async() => {
@@ -32,7 +35,10 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   useEffect(() => {
-    onAuthStateChanged(auth,(user) => setUser(user))
+    onAuthStateChanged(auth,(user) => {
+      setIsLoading(false);
+      setUser(user);
+    })
   },[])
 
   useEffect(() => {
@@ -49,12 +55,12 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   return(
-    <AuthContext.Provider value={{ signInGoogle, signOutGoogle, user }}>
+    <AuthContext.Provider value={{ signInGoogle, signOutGoogle, user, isLoading }}>
       { children }
     </AuthContext.Provider>
   )
 }
 
-export const UserAuth = () => {
+export const useAuth = () => {
   return useContext(AuthContext);
 }

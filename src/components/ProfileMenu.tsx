@@ -1,13 +1,13 @@
 import { Icon } from '@mui/material'
 import { Logout } from '@mui/icons-material'
-import { UserAuth } from "@/context/AuthContext"
+import { useAuth } from '@/context/AuthContext';
 
 export const ProfileMenu = ({source, name}: any) => {
-  const { signOutGoogle } = UserAuth();
+  const { signOutGoogle } = useAuth();
 
-  const logout = () => {
+  const logout = async() => {
     try {
-      signOutGoogle();
+      await signOutGoogle()
     } catch (error) {
       console.log(error)
     }
