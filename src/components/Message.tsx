@@ -4,8 +4,8 @@ import { Edit, Delete } from "@mui/icons-material"
 import { ReactMarkdown } from "react-markdown/lib/react-markdown"
 
 export const Message =({ data, isMine, editMessage, deleteMessage}: MessagePropsType) => {
-  console.log(isMine)
-  const { id, message } = data
+  const { id, message } = data;
+
   return(
     <>
       <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} rounded-lg gap-1`}>
@@ -15,9 +15,7 @@ export const Message =({ data, isMine, editMessage, deleteMessage}: MessageProps
             {data.user}
           </p>
           <div className="w-full flex items-start gap-3">
-            <p className="text-sm">
-              <ReactMarkdown>{data.message}</ReactMarkdown>
-            </p>
+            <ReactMarkdown className="text-sm">{data.message}</ReactMarkdown>
             {
               isMine && 
               <div className=" w-p:text-cyan-950 w-p:hover:text-cyan-400 w-d:text-cyan-400 w-d:hover:text-opacity-100 w-d:text-opacity-0 flex items-start w-p:gap-1 w-d:gap-2">
