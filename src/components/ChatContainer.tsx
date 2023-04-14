@@ -1,8 +1,9 @@
 import { Button, Icon, IconButton } from "@mui/material"
-import { EmojiEmotions, Send, Image  } from '@mui/icons-material'
+import { EmojiEmotions, Send, Image, Close  } from '@mui/icons-material'
 import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
 import { Message } from "./Message"
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState, useRef } from "react"
 import { useAuth } from "@/context/AuthContext"
 import type{ SendMessageType } from "@/types/Provider"
 import type { DeleteMessageType, EditMessageType, MessagesType } from "@/types/Messages"
@@ -17,7 +18,10 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
   const [messageValue, setMessageValue] = useState<string>('');
   const [messageId, setMessageId] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEmojiClosed, setIsEmojiClosed] = useState<boolean>(true);
   const { user, getAllMessages, messages, sendMessage, updateMessage, deleteMessage} = useAuth();
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     getAllMessages(id)
   },[])
@@ -73,6 +77,15 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     handleSendMessage();
   }
 
+  const handleAddEmoji = (emoji: string) => {
+    if (inputRef.current !== null) {
+      const startMessage = inputRef.current.selectionStart ?? 0;
+      const endMessage = inputRef.current.selectionEnd ?? 0;
+      const newMessage = messageValue.substring(0, startMessage) + emoji + messageValue.substring(endMessage);
+      setMessageValue(newMessage);
+    }
+  }
+
   return(
     <>
       <div className="w-full h-full bg-cyan-950 bg-opacity-70 rounded-r-xl">
@@ -99,6 +112,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
         <div className="w-full bg-cyan-950 bg-opacity-90 h-1/10 rounded-br-xl flex p-4 items-center">
           <form onSubmit={handleSubmit} className="w-9/10 w-p:w-4/5 flex h-8">
             <input 
+              ref={inputRef}
               type="text" 
               onChange={handleWriteMessage} 
               value={messageValue} 
@@ -106,15 +120,25 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
             />
           </form>
           <div className="w-1/10 grid grid-cols-2 items-center px-2 gap-2 w-p:w-1/5">
-            <Icon 
-              component={EmojiEmotions} 
-              fontSize={"medium"} 
-              className=" hover:text-cyan-400 cursor-pointer"
-            />
-           { /*<IconButton color="primary" aria-label="upload picture" component="label">
-              <input hidden accept="image/*" type="file"/>
-              <Image fontSize={"medium"} className=" hover:text-cyan-400 cursor-pointer text-white"/>            
-          </IconButton>   */ }       
+            <div className="w-p:hidden w-t:hidden w-d:flex w-5 h-5 relative">
+              {
+                !isEmojiClosed &&
+                <div className={`absolute right-0 bottom-6`}>
+                  <Picker 
+                    data={data} 
+                    onEmojiSelect={(emojiData: any) => {
+                      handleAddEmoji(emojiData.native)
+                    }}
+                  />
+                </div>
+              }
+              <Icon 
+                component={isEmojiClosed ? EmojiEmotions : Close} 
+                fontSize={"medium"} 
+                className=" hover:text-cyan-400 cursor-pointer"
+                onClick={() => setIsEmojiClosed(!isEmojiClosed)}
+              />
+            </div>
             <Icon 
               component={Send} 
               fontSize={"medium"} 
