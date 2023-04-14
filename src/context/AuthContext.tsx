@@ -1,32 +1,28 @@
 import { useContext, createContext, ReactNode, useEffect, useState } from "react";
-import { auth } from "@/firebaseConfig";
+import { auth, db } from "@/firebaseConfig";
 import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider} from 'firebase/auth';
 import { useRouter } from "next/router";
 import type { User } from "firebase/auth";
+import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc } from "firebase/firestore";
+import type { AuthProviderType, ContextType, SendMessageType } from "@/types/Provider";
 
-type contextType = {
-  signInGoogle: () => void;
-  signOutGoogle: () => void;
-  user: User | null;
-  isLoading: boolean;
-}
 
-type AuthProviderType = {
-  children: ReactNode;
-};
-
-const defaultValues: contextType = {
+const defaultValues: ContextType = {
   signInGoogle: () => null,
   signOutGoogle: () => null,
+  sendMessage: () => null,
+  getAllMessages: () => null,
   user: null,
   isLoading: true,
+  messages: null
 }
 
-const AuthContext = createContext<contextType>(defaultValues)
+const AuthContext = createContext<ContextType>(defaultValues)
 
 export const AuthContextProvider = ({ children }: AuthProviderType) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [messages, setMessages] = useState<DocumentData | null>()
   const router = useRouter();
   
   const signInGoogle = async() => {
@@ -54,8 +50,40 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     await signOut(auth)
   }
 
+  const getAllMessages = (id: string) => {
+    const queryMessages = query(collection(db,`rooms/${id}/messages`), orderBy("createdAt"));
+    onSnapshot(queryMessages, (querySnapshot) => {
+      const docs: any[] = []
+      querySnapshot.forEach((doc) => 
+        docs.push({...doc.data(), id: doc.id})
+      );
+      setMessages(docs)
+    });
+  }
+
+  const sendMessage = async ({...props }:SendMessageType) => {
+    const { id, user, message } = props;
+    const now = new Date();
+    const dateTime = now.toISOString();
+
+    await addDoc(collection(db,`rooms/${id}/messages`),{
+      message: message,
+      createdAt: dateTime,
+      
+    })
+  }
+
   return(
-    <AuthContext.Provider value={{ signInGoogle, signOutGoogle, user, isLoading }}>
+    <AuthContext.Provider 
+      value={{ 
+        signInGoogle, 
+        signOutGoogle, user, 
+        isLoading, 
+        getAllMessages, 
+        messages,
+        sendMessage
+      }}
+    >
       { children }
     </AuthContext.Provider>
   )
