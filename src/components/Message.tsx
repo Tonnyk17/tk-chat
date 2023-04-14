@@ -19,15 +19,15 @@ export const Message =({ data, isMine, editMessage, deleteMessage}: MessageProps
             </p>
             {
               isMine && 
-              <div className="text-cyan-400 hover:text-opacity-100 text-opacity-0 flex items-start gap-2">
+              <div className=" w-p:text-cyan-950 w-p:hover:text-cyan-400 w-d:text-cyan-400 w-d:hover:text-opacity-100 w-d:text-opacity-0 flex items-start w-p:gap-1 w-d:gap-2">
                 <Icon 
                   component={Edit} 
-                  className="text-lg cursor-pointer"
+                  className="w-p:text-base w-d:text-lg cursor-pointer"
                   onClick={() => editMessage(id, message)}
                 />
                 <Icon 
                   component={Delete} 
-                  className="text-lg cursor-pointer"
+                  className="w-p:text-base w-d:text-lg cursor-pointer"
                   onClick={() => deleteMessage(id)}
                 />
               </div> 
