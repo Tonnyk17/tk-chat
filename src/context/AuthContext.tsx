@@ -69,7 +69,7 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     await addDoc(collection(db,`rooms/${id}/messages`),{
       message: message,
       createdAt: dateTime,
-      
+      user
     })
   }
 
