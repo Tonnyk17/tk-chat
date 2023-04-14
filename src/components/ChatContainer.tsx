@@ -5,7 +5,7 @@ import { Message } from "./Message"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import type{ SendMessageType } from "@/types/Provider"
-import type { MessagesType } from "@/types/Messages"
+import type { DeleteMessageType, EditMessageType, MessagesType } from "@/types/Messages"
 
 type ChatContainerProps = {
   id: string
@@ -15,7 +15,9 @@ type ChatContainerProps = {
 
 export const ChatContainer = ({id} : ChatContainerProps ) => {
   const [messageValue, setMessageValue] = useState<string>('');
-  const { user, getAllMessages, messages, sendMessage } = useAuth()
+  const [messageId, setMessageId] = useState<string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { user, getAllMessages, messages, sendMessage, updateMessage, deleteMessage} = useAuth();
   useEffect(() => {
     getAllMessages(id)
   },[])
@@ -28,16 +30,42 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
 
   const handleSendMessage = () => {
     if(!!messageValue){
-      const data : SendMessageType = {
-        user: user?.displayName,
-        userEmail: user?.email,
-        userImage: user?.photoURL,
-        id: '4qnTIdHA9zRcIGkMub6R',
-        message: messageValue
+      if(isEdit){
+        const data : EditMessageType = {
+          id: '4qnTIdHA9zRcIGkMub6R',
+          idMessage: messageId,
+          message: messageValue
+        }
+        updateMessage(data)
+        setIsEdit(false)
+        setMessageValue('')
       }
-      sendMessage(data)
-      setMessageValue('')
+      else{
+        const data : SendMessageType = {
+          user: user?.displayName,
+          userEmail: user?.email,
+          userImage: user?.photoURL,
+          id: '4qnTIdHA9zRcIGkMub6R',
+          message: messageValue
+        }
+        sendMessage(data)
+        setMessageValue('')
+      }
     }
+  }
+
+  const handleSelectEdit = (id:string,text: string) => {
+    setMessageValue(text)
+    setMessageId(id)
+    setIsEdit(true)
+  }
+
+  const handleDelete = (id: string) => {
+    const data: DeleteMessageType = {
+      id: '4qnTIdHA9zRcIGkMub6R',
+      idMessage: id
+    }
+    deleteMessage(data)
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -45,7 +73,6 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     handleSendMessage();
   }
 
-  console.log(user?.photoURL)
   return(
     <>
       <div className="w-full h-full bg-cyan-950 bg-opacity-70 rounded-r-xl">
@@ -58,22 +85,42 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
           <div className="flex flex-col gap-2">
             {
               messages?.map((message: MessagesType, i: string) => 
-                <Message key={i} data={message} isMine={message.userEmail === user?.email} />
+                <Message 
+                  key={i} 
+                  data={message} 
+                  isMine={message.userEmail === user?.email} 
+                  editMessage={handleSelectEdit}
+                  deleteMessage={handleDelete}
+                />
               )
             }
           </div>
         </div>
-        <div className="w-full bg-cyan-950 bg-opacity-90 h-1/10 rounded-br-xl flex p-4">
-          <form onSubmit={handleSubmit} className="w-9/10 w-p:w-4/5 flex">
-            <input type="text" onChange={handleWriteMessage} value={messageValue} className="bg-cyan-600 bg-opacity-60 border-none rounded px-1 w-full"/>
+        <div className="w-full bg-cyan-950 bg-opacity-90 h-1/10 rounded-br-xl flex p-4 items-center">
+          <form onSubmit={handleSubmit} className="w-9/10 w-p:w-4/5 flex h-8">
+            <input 
+              type="text" 
+              onChange={handleWriteMessage} 
+              value={messageValue} 
+              className="bg-cyan-600 bg-opacity-60 border-none rounded px-1 w-full focus:outline"
+            />
           </form>
-          <div className="w-1/10 grid grid-cols-3 items-center px-2 gap-2 w-p:w-1/5">
-            <Icon component={EmojiEmotions} fontSize={"medium"} className=" hover:text-cyan-400 cursor-pointer"/>
+          <div className="w-1/10 grid grid-cols-2 items-center px-2 gap-2 w-p:w-1/5">
+            <Icon 
+              component={EmojiEmotions} 
+              fontSize={"medium"} 
+              className=" hover:text-cyan-400 cursor-pointer"
+            />
            { /*<IconButton color="primary" aria-label="upload picture" component="label">
               <input hidden accept="image/*" type="file"/>
               <Image fontSize={"medium"} className=" hover:text-cyan-400 cursor-pointer text-white"/>            
           </IconButton>   */ }       
-            <Icon component={Send} fontSize={"medium"} className=" hover:text-cyan-400 cursor-pointer" onClick={handleSendMessage}/>
+            <Icon 
+              component={Send} 
+              fontSize={"medium"} 
+              className=" hover:text-cyan-400 cursor-pointer" 
+              onClick={handleSendMessage}
+            />
           </div>
         </div>
       </div>

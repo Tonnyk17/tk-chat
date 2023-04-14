@@ -3,13 +3,16 @@ import { auth, db } from "@/firebaseConfig";
 import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider} from 'firebase/auth';
 import { useRouter } from "next/router";
 import type { User } from "firebase/auth";
-import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc } from "firebase/firestore";
+import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import type { AuthProviderType, ContextType, SendMessageType } from "@/types/Provider";
+import { DeleteMessageType, EditMessageType } from "@/types/Messages";
 
 
 const defaultValues: ContextType = {
   signInGoogle: () => null,
   signOutGoogle: () => null,
+  updateMessage: () => null,
+  deleteMessage: () => null,
   sendMessage: () => null,
   getAllMessages: () => null,
   user: null,
@@ -75,15 +78,31 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     })
   }
 
+  const updateMessage = async ({...props }:EditMessageType) => {
+    const { id, message, idMessage } = props;
+    const docRef = doc(db,`rooms/${id}/messages/${idMessage}`)
+    const newMessage = {
+      message
+    }
+    await updateDoc(docRef, newMessage)
+  }
+
+  const deleteMessage = async ({ id, idMessage }: DeleteMessageType) => {
+    const docRef = doc(db,`rooms/${id}/messages/${idMessage}`)
+    await deleteDoc(docRef)
+  }
+
   return(
     <AuthContext.Provider 
       value={{ 
         signInGoogle, 
         signOutGoogle, user, 
         isLoading, 
-        getAllMessages, 
+        getAllMessages,
+        deleteMessage,
         messages,
-        sendMessage
+        sendMessage,
+        updateMessage
       }}
     >
       { children }
