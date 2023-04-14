@@ -1,6 +1,7 @@
 import { MessagePropsType } from "@/types/Messages"
 
 export const Message =({ data, isMine}: MessagePropsType) => {
+  console.log(data)
   return(
     <>
       <div className={`flex ${isMine ? 'justify-end' : 'justify-start'} rounded-lg gap-1`}>

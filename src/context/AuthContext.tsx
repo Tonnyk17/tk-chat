@@ -62,14 +62,16 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   const sendMessage = async ({...props }:SendMessageType) => {
-    const { id, user, message } = props;
+    const { id, message, user, userEmail, userImage } = props;
     const now = new Date();
     const dateTime = now.toISOString();
 
     await addDoc(collection(db,`rooms/${id}/messages`),{
       message: message,
       createdAt: dateTime,
-      user
+      user,
+      userEmail,
+      userImage
     })
   }
 
