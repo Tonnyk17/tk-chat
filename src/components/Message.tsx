@@ -3,6 +3,7 @@ import { Icon } from "@mui/material"
 import { Edit, Delete } from "@mui/icons-material"
 
 export const Message =({ data, isMine, editMessage, deleteMessage}: MessagePropsType) => {
+  console.log(isMine)
   const { id, message } = data
   return(
     <>
@@ -16,18 +17,21 @@ export const Message =({ data, isMine, editMessage, deleteMessage}: MessageProps
             <p className="text-sm">
               {data.message}
             </p>
-            <div className="text-cyan-400 hover:text-opacity-100 text-opacity-0 flex items-start gap-2">
-              <Icon 
-                component={Edit} 
-                className={`${ isMine ? 'inline' : 'hidden'} text-lg cursor-pointer`} 
-                onClick={() => editMessage(id, message)}
-              />
-              <Icon 
-                component={Delete} 
-                className={`${ isMine ? 'inline' : 'hidden'} text-lg cursor-pointer`} 
-                onClick={() => deleteMessage(id)}
-              />
-            </div> 
+            {
+              isMine && 
+              <div className="text-cyan-400 hover:text-opacity-100 text-opacity-0 flex items-start gap-2">
+                <Icon 
+                  component={Edit} 
+                  className="text-lg cursor-pointer"
+                  onClick={() => editMessage(id, message)}
+                />
+                <Icon 
+                  component={Delete} 
+                  className="text-lg cursor-pointer"
+                  onClick={() => deleteMessage(id)}
+                />
+              </div> 
+            }
           </div>
         </div>
       </div>   
