@@ -1,6 +1,7 @@
 import { MessagePropsType } from "@/types/Messages"
 import { Icon } from "@mui/material"
 import { Edit, Delete } from "@mui/icons-material"
+import { ReactMarkdown } from "react-markdown/lib/react-markdown"
 
 export const Message =({ data, isMine, editMessage, deleteMessage}: MessagePropsType) => {
   console.log(isMine)
@@ -15,7 +16,7 @@ export const Message =({ data, isMine, editMessage, deleteMessage}: MessageProps
           </p>
           <div className="w-full flex items-start gap-3">
             <p className="text-sm">
-              {data.message}
+              <ReactMarkdown>{data.message}</ReactMarkdown>
             </p>
             {
               isMine && 
