@@ -1,5 +1,5 @@
 import { Icon } from "@mui/material"
-import { EmojiEmotions, Send, Close } from '@mui/icons-material'
+import { EmojiEmotions, Send, Close, ArrowBackIos } from '@mui/icons-material'
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { Message } from "./Message"
@@ -7,6 +7,7 @@ import { ChangeEvent, FormEvent, useEffect, useState, useRef } from "react"
 import { useAuth } from "@/context/AuthContext"
 import type{ SendMessageType } from "@/types/Provider"
 import type { DeleteMessageType, EditMessageType, MessagesType } from "@/types/Messages"
+import { useRouter } from "next/router"
 
 type ChatContainerProps = {
   id: string
@@ -17,11 +18,13 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
   const [messageId, setMessageId] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isEmojiClosed, setIsEmojiClosed] = useState<boolean>(true);
-  const { user, getAllMessages, messages, sendMessage, updateMessage, deleteMessage} = useAuth();
+  const { user, getAllMessages, messages, sendMessage, updateMessage, deleteMessage, getRoom, room} = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    getAllMessages(id)
+    getAllMessages(id);
+    getRoom(id);
   },[])
 
   const handleWriteMessage = (e:ChangeEvent<HTMLInputElement>) => {
@@ -88,8 +91,9 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     <>
       <div className="w-p:rounded-none w-t:rounded-none w-full h-full bg-cyan-950 bg-opacity-70 rounded-r-xl">
         <div className="w-p:rounded-none w-t:rounded-none w-full h-5/100 bg-cyan-600 bg-opacity-60 rounded-tr-xl flex items-center px-4">
+          <Icon component={ArrowBackIos} onClick={() => router.push("/chat")} className=" hover:text-cyan-300 cursor-pointer"/>
           <p>
-            Chat test
+            {room?.name}
           </p>
         </div>
         <div className="w-full h-17/20 p-2 overflow-y-scroll">

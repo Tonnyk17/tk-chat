@@ -1,15 +1,20 @@
 import { useAuth } from "@/context/AuthContext"
+import { DocumentData } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { AddChat } from "./AddChat";
 
-export const RoomsList = () => {
+type RoomListProps = {
+  rooms : DocumentData | null | undefined;
+}
+
+
+export const RoomsList = ({ rooms } : RoomListProps) => {
   const router = useRouter();
-  const { rooms } = useAuth();
   
   return(
     <>
       <div className="w-full h-full">
-       {
+        {
         rooms?.map((room: any,i: number) => 
           <div 
             key={i} 
@@ -24,7 +29,7 @@ export const RoomsList = () => {
             </div>
           </div>
         )
-       }
+        }
       </div>
     </>
   )

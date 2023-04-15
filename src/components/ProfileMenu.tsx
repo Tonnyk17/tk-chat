@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 
 export const ProfileMenu = ({source, name}: any) => {
-  const { signOutGoogle } = useAuth();
+  const { signOutGoogle, closeModal } = useAuth();
   const router = useRouter()
 
   const handleLogout = async() => {
@@ -22,7 +22,7 @@ export const ProfileMenu = ({source, name}: any) => {
           </p>
         </div>
         <div className="flex gap-2">
-          <Icon component={Add} fontSize={'medium'} className=" hover:text-cyan-300 cursor-pointer"/>
+          <Icon component={Add} fontSize={'medium'} className=" hover:text-cyan-300 cursor-pointer" onClick={closeModal}/>
           <Icon component={Logout} fontSize={'medium'} className=" hover:text-cyan-300 cursor-pointer" onClick={handleLogout}/>                 
         </div>
       </div>
