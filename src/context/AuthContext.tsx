@@ -3,7 +3,7 @@ import { auth, db } from "@/firebaseConfig";
 import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider} from 'firebase/auth';
 import { useRouter } from "next/router";
 import type { User } from "firebase/auth";
-import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc, doc, where } from "firebase/firestore";
 import type { AuthProviderType, ContextType, SendMessageType } from "@/types/Provider";
 import { DeleteMessageType, EditMessageType } from "@/types/Messages";
 
@@ -14,6 +14,8 @@ const defaultValues: ContextType = {
   updateMessage: () => null,
   deleteMessage: () => null,
   sendMessage: () => null,
+  getRooms: () => null,
+  rooms: null,
   getAllMessages: () => null,
   user: null,
   isLoading: true,
@@ -24,8 +26,9 @@ const AuthContext = createContext<ContextType>(defaultValues)
 
 export const AuthContextProvider = ({ children }: AuthProviderType) => {
   const [user, setUser] = useState<User | null>(null);
+  const [rooms, setRooms] = useState<DocumentData | null>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [messages, setMessages] = useState<DocumentData | null>()
+  const [messages, setMessages] = useState<DocumentData | null>();
   const router = useRouter();
   
   const signInGoogle = async() => {
@@ -34,13 +37,16 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   const sessionRedirect = (userData : User | null) => {
-    if(!!userData){
-      router.push('/chat')
-    }
-    else{
+    
+    if(!userData){
       router.push('/')
     }
+    else {
+      if(router.pathname === '/') router.push('/chat')
+    }
+    
   }
+
   useEffect(() => {
     onAuthStateChanged(auth,(currentUser) => {
       setUser(currentUser)
@@ -63,6 +69,26 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
       setMessages(docs)
     });
   }
+
+  const getRooms = (user: string | null | undefined) => {
+    const queryMessages = query(collection(db,`rooms`));
+    onSnapshot(queryMessages, (querySnapshot) => {
+      const docs: any[] = []
+      querySnapshot.forEach((doc) => {
+        const data = doc.data()
+        if(data.users.includes(user)) {
+          docs.push({...data, id: doc.id})}
+        }
+      );
+      setRooms(docs)
+    });
+  }
+
+  useEffect(() => {
+    if(user){
+      getRooms(user?.email)
+    }
+  },[user])
 
   const sendMessage = async ({...props }:SendMessageType) => {
     const { id, message, user, userEmail, userImage } = props;
@@ -100,6 +126,8 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
         isLoading, 
         getAllMessages,
         deleteMessage,
+        getRooms,
+        rooms,
         messages,
         sendMessage,
         updateMessage

@@ -22,8 +22,10 @@ export type ContextType = {
   updateMessage: (props: EditMessageType) => void;
   deleteMessage: (props: DeleteMessageType) => void;
   sendMessage: (props: SendMessageType) => void;
+  getRooms: (user: string | null | undefined) => void;
+  rooms: DocumentData | null | undefined;
   user: User | null;
   isLoading: boolean;
   getAllMessages: (id: string) => void;
-  messages: DocumentData | null | undefined
+  messages: DocumentData | null | undefined;
 }

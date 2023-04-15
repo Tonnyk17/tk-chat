@@ -1,5 +1,5 @@
-import { Button, Icon, IconButton } from "@mui/material"
-import { EmojiEmotions, Send, Image, Close  } from '@mui/icons-material'
+import { Icon } from "@mui/material"
+import { EmojiEmotions, Send, Close } from '@mui/icons-material'
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { Message } from "./Message"
@@ -11,8 +11,6 @@ import type { DeleteMessageType, EditMessageType, MessagesType } from "@/types/M
 type ChatContainerProps = {
   id: string
 }
-
-
 
 export const ChatContainer = ({id} : ChatContainerProps ) => {
   const [messageValue, setMessageValue] = useState<string>('');
@@ -36,9 +34,9 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     if(!!messageValue){
       if(isEdit){
         const data : EditMessageType = {
-          id: '4qnTIdHA9zRcIGkMub6R',
           idMessage: messageId,
-          message: messageValue
+          message: messageValue,
+          id
         }
         updateMessage(data)
         setIsEdit(false)
@@ -49,8 +47,8 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
           user: user?.displayName,
           userEmail: user?.email,
           userImage: user?.photoURL,
-          id: '4qnTIdHA9zRcIGkMub6R',
-          message: messageValue
+          message: messageValue,
+          id
         }
         sendMessage(data)
         setMessageValue('')
@@ -64,10 +62,10 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     setIsEdit(true)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (messageId: string) => {
     const data: DeleteMessageType = {
-      id: '4qnTIdHA9zRcIGkMub6R',
-      idMessage: id
+      idMessage: messageId,
+      id
     }
     deleteMessage(data)
   }
@@ -88,8 +86,8 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
 
   return(
     <>
-      <div className="w-full h-full bg-cyan-950 bg-opacity-70 rounded-r-xl">
-        <div className="w-full h-5/100 bg-cyan-600 bg-opacity-60 rounded-tr-xl flex items-center px-4">
+      <div className="w-p:rounded-none w-t:rounded-none w-full h-full bg-cyan-950 bg-opacity-70 rounded-r-xl">
+        <div className="w-p:rounded-none w-t:rounded-none w-full h-5/100 bg-cyan-600 bg-opacity-60 rounded-tr-xl flex items-center px-4">
           <p>
             Chat test
           </p>
@@ -109,7 +107,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
             }
           </div>
         </div>
-        <div className="w-full bg-cyan-950 bg-opacity-90 h-1/10 rounded-br-xl flex p-4 items-center">
+        <div className="w-p:rounded-none w-t:rounded-none w-full bg-cyan-950 bg-opacity-90 h-1/10 rounded-br-xl flex p-4 items-center">
           <form onSubmit={handleSubmit} className="w-9/10 w-p:w-4/5 flex h-8">
             <input 
               ref={inputRef}
@@ -119,7 +117,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
               className="bg-cyan-600 bg-opacity-60 border-none rounded px-1 w-full focus:outline"
             />
           </form>
-          <div className="w-1/10 grid grid-cols-2 items-center px-2 gap-2 w-p:w-1/5">
+          <div className="w-1/10 flex justify-center items-start px-2 gap-2 w-p:w-1/5">
             <div className="w-p:hidden w-t:hidden w-d:flex w-5 h-5 relative">
               {
                 !isEmojiClosed &&
