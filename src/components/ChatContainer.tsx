@@ -139,7 +139,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
               className="bg-cyan-600 bg-opacity-60 border-none rounded px-1 w-full focus:outline"
             />
           </form>
-          <div className="w-1/10 flex justify-center items-start px-2 gap-2 w-p:w-1/5">
+          <div className="w-1/10 flex justify-start items-start px-2 gap-4 w-p:w-1/5">
             <div className="w-p:hidden w-t:hidden w-d:flex w-5 h-5 relative">
               {
                 !isEmojiClosed &&

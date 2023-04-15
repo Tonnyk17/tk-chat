@@ -10,7 +10,7 @@ export const RoomsList = ({ rooms } : RoomListProps) => {
   
   return(
     <>
-      <div className="w-full h-full">
+      <div className="w-full h-full overflow-y-scroll">
         {
         rooms?.map((room: any,i: number) => 
           <div 
