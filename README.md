@@ -1,3 +1,32 @@
+## How to use
+
+ The first step is login with your google account :smile:
+ 
+ ![image](https://user-images.githubusercontent.com/62124025/232206444-3e9e51d0-8e83-4446-b525-dfb3c7d8421f.png)
+ 
+ 
+ The second step is create a chat room, you can do this by clicking on the "+" icon next to your name or in the window with the message "Click to create a chat room". 
+  
+ ![image](https://user-images.githubusercontent.com/62124025/232206629-82c9f714-497b-4714-88a5-273fc1f56808.png)
+
+
+ Follow the steps of modal to create a chat room 
+
+ ![image](https://user-images.githubusercontent.com/62124025/232207728-f8859717-dcab-4c37-a9c4-5c4ef42c4454.png)
+
+ 
+ Select your chat room 
+  
+ ![image](https://user-images.githubusercontent.com/62124025/232207768-7fe9070f-6810-465a-88c1-e912391a4452.png)
+ 
+ 
+ Enjoy and keep rocking :fire:
+ 
+ ![image](https://user-images.githubusercontent.com/62124025/232208006-3b932484-b69a-409e-9da8-38ba328dd993.png)
+
+
+Note: If you want to edit or delete a message, place the cursor over it.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
