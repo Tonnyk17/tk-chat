@@ -67,7 +67,7 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   const getAllMessages = async (id: string) => {
-    const queryMessages = query(collection(db,`rooms/${id}/messages`), orderBy("createdAt"));
+    const queryMessages = query(collection(db,`rooms/${id}/messages`), orderBy("createdAt",'asc'));
     await onSnapshot(queryMessages, (querySnapshot) => {
       const docs: any[] = []
       querySnapshot.forEach((doc) => 

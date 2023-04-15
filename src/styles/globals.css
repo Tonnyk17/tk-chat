@@ -8,16 +8,8 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
+  color: white;
   background-image: url('https://firebasestorage.googleapis.com/v0/b/tk-chat-5321e.appspot.com/o/coffee.webp?alt=media&token=f4231235-9004-409d-a1bc-4e775653c858');
   background-size: cover;
   background-repeat: no-repeat;
