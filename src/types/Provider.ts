@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import type { DocumentData } from "firebase/firestore";
-import type { ReactNode } from "react";
+import type { ReactNode, SetStateAction } from "react";
 import { DeleteMessageType, EditMessageType } from "./Messages";
 
 
@@ -19,6 +19,8 @@ export type SendMessageType = {
 export type ContextType = {
   signInGoogle: () => void;
   signOutGoogle: () => void;
+  isClosedModal: boolean;
+  closeModal: () => void;
   updateMessage: (props: EditMessageType) => void;
   deleteMessage: (props: DeleteMessageType) => void;
   sendMessage: (props: SendMessageType) => void;
@@ -28,4 +30,7 @@ export type ContextType = {
   isLoading: boolean;
   getAllMessages: (id: string) => void;
   messages: DocumentData | null | undefined;
+  getRoom : (id: string) => void;
+  room: DocumentData | null | undefined;
+  createRoom: (name: string, users: string[]) => void;
 }

@@ -17,9 +17,14 @@ const defaultValues: ContextType = {
   getRooms: () => null,
   rooms: null,
   getAllMessages: () => null,
+  getRoom: () => null,
+  room: null,
   user: null,
   isLoading: true,
-  messages: null
+  messages: null,
+  isClosedModal : true,
+  closeModal : () => null,
+  createRoom : () => null
 }
 
 const AuthContext = createContext<ContextType>(defaultValues)
@@ -27,9 +32,15 @@ const AuthContext = createContext<ContextType>(defaultValues)
 export const AuthContextProvider = ({ children }: AuthProviderType) => {
   const [user, setUser] = useState<User | null>(null);
   const [rooms, setRooms] = useState<DocumentData | null>();
+  const [room, setRoom] = useState<DocumentData | null>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [messages, setMessages] = useState<DocumentData | null>();
+  const [isClosedModal, setIsClosedModal] = useState<boolean>(true);
   const router = useRouter();
+
+  const closeModal = () => {
+    setIsClosedModal(!isClosedModal);
+  }
   
   const signInGoogle = async() => {
     const provider = new GoogleAuthProvider();
@@ -84,6 +95,11 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     });
   }
 
+  const getRoom = (id: string) => {
+    const chat = rooms?.find((room: any) => room.id === id)
+    setRoom(chat)
+  }
+
   useEffect(() => {
     if(user){
       getRooms(user?.email)
@@ -101,6 +117,13 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
       user,
       userEmail,
       userImage
+    })
+  }
+
+  const createRoom = async (name: string, users: string[]) => {
+    await addDoc(collection(db, "rooms"),{
+      name,
+      users
     })
   }
 
@@ -130,7 +153,12 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
         rooms,
         messages,
         sendMessage,
-        updateMessage
+        updateMessage,
+        closeModal,
+        isClosedModal,
+        getRoom,
+        room,
+        createRoom
       }}
     >
       { children }
