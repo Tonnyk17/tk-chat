@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { ChatContainer } from "@/components/ChatContainer";
 import { RoomsList } from "@/components/RoomsList";
 import { useEffect } from "react";
+import { CreateChatModal } from "@/components/CreateChatModal";
 
 export default function Chat() {
   const router = useRouter();
@@ -35,6 +36,9 @@ export default function Chat() {
               <div className="w-full h-full flex">
                 <ChatContainer id={String(router?.query?.id)}/> 
               </div>    
+            </div>
+            <div>
+              <CreateChatModal/>
             </div>
           </div>
         :

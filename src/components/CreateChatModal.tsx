@@ -40,7 +40,7 @@ export const CreateChatModal = () => {
     if(isValidate){
       handleCreateRoom();
     } else {
-      alert("Error")
+      alert("Error: Emails or email list are not valid.")
     }
   }
 
@@ -98,7 +98,7 @@ export const CreateChatModal = () => {
                     onChange={handleWriteParticipants}
                   />
                 </div>
-                <button className=' bg-purple-900 p-2 rounded-md hover:opacity-70 flex gap-2' >
+                <button className=' bg-purple-900 p-2 rounded-md hover:opacity-70 flex gap-2'>
                   Create Chat
                 </button>
               </form>
