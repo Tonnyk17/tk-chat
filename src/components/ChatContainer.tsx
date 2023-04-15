@@ -5,9 +5,9 @@ import data from '@emoji-mart/data'
 import { Message } from "./Message"
 import { ChangeEvent, FormEvent, useEffect, useState, useRef } from "react"
 import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/router"
 import type{ SendMessageType } from "@/types/Provider"
 import type { DeleteMessageType, EditMessageType, MessagesType } from "@/types/Messages"
-import { useRouter } from "next/router"
 
 type ChatContainerProps = {
   id: string
@@ -18,14 +18,32 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
   const [messageId, setMessageId] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isEmojiClosed, setIsEmojiClosed] = useState<boolean>(true);
-  const { user, getAllMessages, messages, sendMessage, updateMessage, deleteMessage, getRoom, room} = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
+  const { user, 
+    getAllMessages, 
+    messages, 
+    sendMessage, 
+    updateMessage, 
+    deleteMessage, 
+    getRoom, 
+    room
+  } = useAuth();
+  
   useEffect(() => {
     getAllMessages(id);
     getRoom(id);
-  },[])
+  },[id])
+
+  const scrollDown = (divRef: React.RefObject<HTMLDivElement>) => {
+    if (divRef.current) {
+      divRef.current.scrollTo({
+        top: divRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }
 
   const handleWriteMessage = (e:ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -44,8 +62,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
         updateMessage(data)
         setIsEdit(false)
         setMessageValue('')
-      }
-      else{
+      } else{
         const data : SendMessageType = {
           user: user?.displayName,
           userEmail: user?.email,
@@ -55,6 +72,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
         }
         sendMessage(data)
         setMessageValue('')
+        scrollDown(scrollRef)
       }
     }
   }
@@ -73,8 +91,8 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
     deleteMessage(data)
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     handleSendMessage();
   }
 
@@ -96,7 +114,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
             {room?.name}
           </p>
         </div>
-        <div className="w-full h-17/20 p-2 overflow-y-scroll">
+        <div ref={scrollRef} className="w-full h-17/20 p-2 overflow-y-scroll">
           <div className="flex flex-col gap-2">
             {
               messages?.map((message: MessagesType, i: string) => 

@@ -1,12 +1,9 @@
-import { useAuth } from "@/context/AuthContext"
 import { DocumentData } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { AddChat } from "./AddChat";
 
 type RoomListProps = {
   rooms : DocumentData | null | undefined;
 }
-
 
 export const RoomsList = ({ rooms } : RoomListProps) => {
   const router = useRouter();

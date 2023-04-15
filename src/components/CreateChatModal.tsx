@@ -7,6 +7,7 @@ export const CreateChatModal = () => {
   const { closeModal, isClosedModal, createRoom } = useAuth();
   const [chatName, setChatName] = useState<string>();
   const [chatParticipants, setChatParticipants] = useState<string[]>();
+  const [participantsString, setParticipantsString] = useState<string>('');
 
   const handleWriteName = (e:ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -19,6 +20,7 @@ export const CreateChatModal = () => {
     const inputValue = (e.target as HTMLInputElement).value;
     const listParticipants = inputValue.split(",");
     const participants = listParticipants.map((item) => item.trim());
+    setParticipantsString(inputValue)    
     setChatParticipants(participants)
   }
 
@@ -29,14 +31,17 @@ export const CreateChatModal = () => {
       setChatName('');
       setChatParticipants([]);
     }
-    else{
-      alert("xd")
-    }
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    handleCreateRoom();
+    const partRegex = /^[\w-\.]+@gmail\.com(?:,[\w-\.]+@gmail\.com){0,19}$/;
+    const isValidate = partRegex.test(participantsString)
+    if(isValidate){
+      handleCreateRoom();
+    } else {
+      alert("Error")
+    }
   }
 
   return(
@@ -51,8 +56,24 @@ export const CreateChatModal = () => {
               className="hover:text-cyan-300 cursor-pointer" 
               onClick={closeModal}
             />
-            <div className="w-full h-full">
-              <form onSubmit={handleSubmit} className="w-full h-full flex flex-col justify-center items-center gap-7">
+            <div className="w-full h-full flex flex-col gap-5 items-center">
+              <div className="w-9/10 flex flex-col items-start gap-2 w-p:text-sm w-t:text-base text-cyan-300 font-semibold">
+                <p>
+                  To add participants to the chat, follow these steps:
+                </p>
+                <ol className="list-decimal">
+                  <li>
+                    Write a name of the chat room
+                  </li>
+                  <li>
+                    Write the email address of each participant separated by a comma.
+                  </li>
+                  <li>
+                    Make sure that each email address is a Gmail address. (For example: email@gmail.com,test@gmail.com)
+                  </li>               
+                </ol>
+              </div>
+              <form onSubmit={handleSubmit} className="w-full flex flex-col justify-center items-center gap-7">
                 <div className="flex flex-col w-p:w-9/10 w-1/2">
                   <label htmlFor="roomName" className="text-cyan-200">Name of chat room:</label>
                   <input 
@@ -76,9 +97,6 @@ export const CreateChatModal = () => {
                     className="w-full h-8 bg-cyan-950 bg-opacity-90 border-none rounded px-1 focus:outline"
                     onChange={handleWriteParticipants}
                   />
-                  <p className="text-xs text-cyan-950 font-bold">
-                    Write the email of the participants. For example: email@gmail.com, test@gmail.com.
-                  </p>
                 </div>
                 <button className=' bg-purple-900 p-2 rounded-md hover:opacity-70 flex gap-2' >
                   Create Chat

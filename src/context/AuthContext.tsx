@@ -1,12 +1,11 @@
-import { useContext, createContext, ReactNode, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useState } from "react";
 import { auth, db } from "@/firebaseConfig";
-import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider} from 'firebase/auth';
+import { signInWithRedirect, signOut, onAuthStateChanged, GoogleAuthProvider, getRedirectResult} from 'firebase/auth';
 import { useRouter } from "next/router";
-import type { User } from "firebase/auth";
-import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc, doc, where } from "firebase/firestore";
+import { DocumentData, addDoc, collection, onSnapshot, orderBy, query, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import type { AuthProviderType, ContextType, SendMessageType } from "@/types/Provider";
-import { DeleteMessageType, EditMessageType } from "@/types/Messages";
-
+import type { DeleteMessageType, EditMessageType } from "@/types/Messages";
+import type { User } from "firebase/auth";
 
 const defaultValues: ContextType = {
   signInGoogle: () => null,
@@ -14,7 +13,6 @@ const defaultValues: ContextType = {
   updateMessage: () => null,
   deleteMessage: () => null,
   sendMessage: () => null,
-  getRooms: () => null,
   rooms: null,
   getAllMessages: () => null,
   getRoom: () => null,
@@ -48,14 +46,12 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
   }
 
   const sessionRedirect = (userData : User | null) => {
-    
     if(!userData){
       router.push('/')
     }
     else {
       if(router.pathname === '/') router.push('/chat')
     }
-    
   }
 
   useEffect(() => {
@@ -70,9 +66,9 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     await signOut(auth)
   }
 
-  const getAllMessages = (id: string) => {
+  const getAllMessages = async (id: string) => {
     const queryMessages = query(collection(db,`rooms/${id}/messages`), orderBy("createdAt"));
-    onSnapshot(queryMessages, (querySnapshot) => {
+    await onSnapshot(queryMessages, (querySnapshot) => {
       const docs: any[] = []
       querySnapshot.forEach((doc) => 
         docs.push({...doc.data(), id: doc.id})
@@ -81,9 +77,9 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
     });
   }
 
-  const getRooms = (user: string | null | undefined) => {
+  const getRooms = async(user: string | null | undefined) => {
     const queryMessages = query(collection(db,`rooms`));
-    onSnapshot(queryMessages, (querySnapshot) => {
+    await onSnapshot(queryMessages, (querySnapshot) => {
       const docs: any[] = []
       querySnapshot.forEach((doc) => {
         const data = doc.data()
@@ -149,7 +145,6 @@ export const AuthContextProvider = ({ children }: AuthProviderType) => {
         isLoading, 
         getAllMessages,
         deleteMessage,
-        getRooms,
         rooms,
         messages,
         sendMessage,
