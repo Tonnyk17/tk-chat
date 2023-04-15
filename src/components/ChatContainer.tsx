@@ -135,6 +135,7 @@ export const ChatContainer = ({id} : ChatContainerProps ) => {
               ref={inputRef}
               type="text" 
               onChange={handleWriteMessage} 
+              placeholder="Message..."
               value={messageValue} 
               className="bg-cyan-600 bg-opacity-60 border-none rounded px-1 w-full focus:outline"
             />
