@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
 body {
   color: white;
   background-image: url('https://firebasestorage.googleapis.com/v0/b/tk-chat-5321e.appspot.com/o/coffee.webp?alt=media&token=f4231235-9004-409d-a1bc-4e775653c858');
