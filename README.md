@@ -26,6 +26,7 @@
 
 
 Note: If you want to edit or delete a message, place the cursor over it.
+Note2: I recommend use Google Chrome to test
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
