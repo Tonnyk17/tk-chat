@@ -49,14 +49,14 @@ export const CreateChatModal = () => {
      {
         !isClosedModal &&  
         <div className="w-screen h-screen absolute left-0 top-0 bg-gray-800  bg-opacity-80 flex justify-center items-center">
-          <div className="w-p:w-9/10 w-p:h-9/10 w-t:w-9/10 w-t:h-1/2 w-d:w-1/2 w-d:h-1/2 bg-cyan-600 bg-opacity-70 rounded-lg border-2 border-cyan-300 flex flex-col items-end shadow-md shadow-cyan-300 p-5 gap-3">
+          <div className="w-p:w-9/10 w-p:h-9/10 w-t:w-9/10 w-t:h-3/4 w-d:w-1/2 w-d:h-3/4 bg-cyan-600 bg-opacity-70 rounded-lg border-2 border-cyan-300 flex flex-col items-end shadow-md shadow-cyan-300 p-5 gap-3">
             <Icon 
               component={Close} 
               fontSize={"medium"} 
               className="hover:text-cyan-300 cursor-pointer" 
               onClick={closeModal}
             />
-            <div className="w-full h-full flex flex-col gap-5 items-center">
+            <div className="w-full h-full flex flex-col gap-6 items-center justify-center">
               <div className="w-9/10 flex flex-col items-start gap-2 w-p:text-sm w-t:text-base text-cyan-300 font-semibold">
                 <p>
                   To add members to the chat, follow these steps:
